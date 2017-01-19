@@ -29,16 +29,16 @@
                 color: #d6e7b4;
             }
             .desc {
-                font-size: 30px;
+                font-size: 35px;
             }
             .time {
-                font-size: 40px;
+                font-size: 60px;
             }
         </style>
     </head>
     <body>
         <div class="mid-center">
-            <p class="desc">距离今天 <span id="js-day">--</span> 下班还有</p>
+            <p class="desc">距离今天 <span id="js-day">周几</span> 下班还有</p>
             <p id="js-countdown-time" class="time">
                 -- : -- : --
             </p>
@@ -49,6 +49,18 @@
             function updateTime() {
                 // 获取毫秒时间差
                 var diff = today.getTime() - Date.now();
+                // 当天下午6点一过，修改为第二天下午6点再计算结果
+                if (diff < 0) {
+                    today.setDate(today.getDate() + 1);
+                    diff = today.getTime() - Date.now();
+                }
+
+                // 获取今天是周几并且更新
+                var day = today.getDay();
+                var $dayText = document.getElementById('js-day');
+                $dayText.innerHTML = days[day];
+
+                // 更新倒计时
                 var $countdown = document.getElementById('js-countdown-time');
                 $countdown.innerHTML = diffTime(diff);
             }
@@ -69,19 +81,11 @@
             // 设置星期数组
             const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
-            // 设置当天的下午6点，如果打开的时间已经超过，则调整为第二天的下午6点
+            // 设置当天的下午6点
             var today = new Date();
             today.setHours(18);
             today.setMinutes(0);
             today.setSeconds(0);
-            if (today.getTime() - Date.now() < 0) {
-                today.setDate(today.getDate() + 1);
-            }
-
-            // 获取今天是周几并且更新
-            var day = today.getDay();
-            var $dayText = document.getElementById('js-day');
-            $dayText.innerHTML = days[day];
 
             // 每秒更新倒计时
             var t = setInterval(updateTime, 1000);

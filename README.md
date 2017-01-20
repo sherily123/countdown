@@ -7,3 +7,5 @@ v1.0.0
  - turn to next day 18pm if current time is over to today 18pm
 v1.0.1
  - update handler of time calculation
+v1.0.2
+ - add time milestone of noon break.

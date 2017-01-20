@@ -17,7 +17,7 @@
                 margin: 0;
             }
             .mid-center {
-                width: auto;
+                width: 100%;
                 height: auto;
                 position: absolute;
                 top: 50%;
@@ -38,7 +38,7 @@
     </head>
     <body>
         <div class="mid-center">
-            <p class="desc">距离今天 <span id="js-day">周几</span> 下班还有</p>
+            <p class="desc">距离今天 <span id="js-day"></span> <span id="js-event">下班</span>只剩下</p>
             <p id="js-countdown-time" class="time">
                 -- : -- : --
             </p>
@@ -48,17 +48,24 @@
             /* 功能函数：获取倒计时 */
             function updateTime() {
                 // 获取毫秒时间差
-                var diff = today.getTime() - Date.now();
-                // 当天下午6点一过，修改为第二天下午6点再计算结果
-                if (diff < 0) {
-                    today.setDate(today.getDate() + 1);
-                    diff = today.getTime() - Date.now();
+                var now = Date.now();
+                var diffNoon = noon.getTime() - now;
+                var diffOff = offWork.getTime() - now;
+                var diff = diffNoon;
+                // 当天休息点已过，修改为下一个休息点（当天午休->当天下班，当天下班->第二天午休）
+                if (diffNoon < 0 && diffOff > 0) {
+                    diff = diffOff;
+                } else if (diffOff < 0) {
+                    noon.setDate(noon.getDate() + 1);
+                    diff = noon.getTime() - now;
                 }
 
-                // 获取今天是周几并且更新
-                var day = today.getDay();
+                // 更新周几和后方文本（午休/下班）
+                var day = noon.getDay();
                 var $dayText = document.getElementById('js-day');
+                var $event = document.getElementById('js-event');
                 $dayText.innerHTML = days[day];
+                $event.innerHTML = diff === diffNoon ? '午休' : '下班';
 
                 // 更新倒计时
                 var $countdown = document.getElementById('js-countdown-time');
@@ -78,14 +85,18 @@
             }
 
             /* 主函数 */
-            // 设置星期数组
+            // 设置常量
             const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
-            // 设置当天的下午6点
-            var today = new Date();
-            today.setHours(18);
-            today.setMinutes(0);
-            today.setSeconds(0);
+            var noon = new Date();
+            noon.setHours(11);
+            noon.setMinutes(50);
+            noon.setSeconds(0);
+
+            var offWork = new Date();
+            offWork.setHours(18);
+            offWork.setMinutes(0);
+            offWork.setSeconds(0);
 
             // 每秒更新倒计时
             var t = setInterval(updateTime, 1000);

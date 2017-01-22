@@ -9,3 +9,6 @@ v1.0.1
  - update handler of time calculation
 v1.0.2
  - add time milestone of noon break.
+
+# Comming
+ - special output for weekend :)

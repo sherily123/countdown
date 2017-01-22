@@ -57,6 +57,7 @@
                     diff = diffOff;
                 } else if (diffOff < 0) {
                     noon.setDate(noon.getDate() + 1);
+                    offWork.setDate(offWork.getDate() + 1);
                     diff = noon.getTime() - now;
                 }
 

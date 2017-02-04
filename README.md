@@ -11,4 +11,8 @@ v1.0.2
  - add time milestone of noon break.
 
 # Comming
+## recent
  - special output for weekend :)
+## long-term
+ - get up to latest holiday calendar, differ Chinese holiday arrangement output
+ - deploy to online
